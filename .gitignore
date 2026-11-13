@@ -31,3 +31,6 @@ test-results/
 *.sqlite3-wal
 *.sqlite3-shm
 *.sqlite3-journal
+.npm-cache/
+data/_e2e_candidate.geojson
+data/e2e-screenshot.png

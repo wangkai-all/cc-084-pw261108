@@ -1,0 +1,54 @@
+{
+  "type": "FeatureCollection",
+  "name": "示例图层_经纬度颠倒",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:4326"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "S01-颠倒点1",
+      "properties": {
+        "name": "S01-颠倒点1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.9,
+          116.3
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "S02-颠倒点2",
+      "properties": {
+        "name": "S02-颠倒点2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.23,
+          121.47
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "S03-颠倒点3",
+      "properties": {
+        "name": "S03-颠倒点3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          22.54,
+          114.06
+        ]
+      }
+    }
+  ]
+}

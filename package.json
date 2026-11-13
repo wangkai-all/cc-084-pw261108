@@ -1,0 +1,32 @@
+{
+  "name": "geo-qc-station",
+  "version": "1.0.0",
+  "description": "离线地理数据质检台：GeoJSON / 坐标 CSV 导入、质检、候选修复",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/main.js --bundle --format=esm --outfile=vendor/bundle.js --log-level=warning",
+    "samples": "node data/generate-samples.js && node tools/build-samples.js && npm run build",
+    "test": "node --test test/engine.test.js test/app-state.test.js",
+    "test:e2e": "node test/e2e.test.js",
+    "serve": "node tools/serve.js"
+  },
+  "keywords": [
+    "geojson",
+    "quality-control",
+    "crs",
+    "offline"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "proj4": "^2.23.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "jsdom": "^26.1.0",
+    "playwright": "^1.56.1"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "type": "FeatureCollection",
+  "name": "示例图层_缺坐标系",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "N01",
+      "properties": {
+        "name": "N01"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.47,
+          31.23
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "N02",
+      "properties": {
+        "name": "N02"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.47,
+              31.23
+            ],
+            [
+              121.5,
+              31.23
+            ],
+            [
+              121.5,
+              31.26
+            ],
+            [
+              121.47,
+              31.26
+            ],
+            [
+              121.47,
+              31.23
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>地理数据质检台 · 离线版</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<noscript>
+  <p style="padding:40px;font-family:system-ui,sans-serif">
+    本质检台需要启用 JavaScript。所有计算均在本地浏览器完成，不加载任何在线底图或外部服务。
+  </p>
+</noscript>
+<div id="app" class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">QC</span>
+      <div>
+        <h1>地理数据质检台</h1>
+        <p class="sub">GeoJSON / 坐标 CSV 离线质检 · 修复只生成候选副本，不覆盖源文件</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="btn-sample" class="btn btn-ghost" type="button">载入虚构示例</button>
+      <label class="btn btn-primary">
+        导入 GeoJSON
+        <input id="file-geojson" type="file" accept=".json,.geojson,application/json" hidden multiple />
+      </label>
+      <button id="btn-csv" class="btn btn-primary" type="button">导入坐标 CSV</button>
+      <button id="btn-crs-assign" class="btn btn-ghost" type="button">指定图层 CRS</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- 左：地图 -->
+    <section class="map-pane">
+      <div class="map-toolbar">
+        <div id="map-mode" class="map-mode">显示坐标：—</div>
+        <div class="toolbar-spacer"></div>
+        <button id="btn-fit" class="btn btn-mini" type="button">适应范围</button>
+        <button id="btn-proj" class="btn btn-mini" type="button">切换投影…</button>
+      </div>
+      <div class="map-wrap">
+        <canvas id="map"></canvas>
+        <div id="map-tooltip" class="map-tooltip" hidden></div>
+        <div id="map-empty" class="map-empty">
+          <p>暂无数据</p>
+          <p class="muted">导入 GeoJSON / CSV，或载入虚构示例开始质检</p>
+          <p class="offline-note">全部计算与渲染在本地完成，不加载任何在线底图</p>
+        </div>
+      </div>
+      <div id="layer-bar" class="layer-bar"></div>
+    </section>
+
+    <!-- 右：面板 -->
+    <aside class="side-pane">
+      <nav class="tabs" role="tablist">
+        <button class="tab active" data-tab="issues" type="button">问题列表</button>
+        <button class="tab" data-tab="features" type="button">要素表</button>
+        <button class="tab" data-tab="repair" type="button">候选修复</button>
+        <button class="tab" data-tab="lineage" type="button">溯源</button>
+      </nav>
+
+      <div class="stats" id="stats"></div>
+
+      <section class="tab-panel active" data-panel="issues">
+        <div class="filters">
+          <select id="filter-layer" aria-label="按图层过滤"></select>
+          <select id="filter-sev" aria-label="按严重度过滤">
+            <option value="">全部严重度</option>
+            <option value="critical">严重</option>
+            <option value="serious">重要</option>
+            <option value="warning">警告</option>
+            <option value="info">提示</option>
+          </select>
+          <select id="filter-type" aria-label="按问题类型过滤"></select>
+          <input id="filter-text" type="search" placeholder="搜索要素/行号/详情…" />
+        </div>
+        <div style="padding:0 14px 8px; display:flex; justify-content:flex-end">
+          <button id="btn-export-issues" class="btn btn-mini" type="button">导出当前问题为 CSV</button>
+        </div>
+        <div id="issue-list" class="issue-list"></div>
+      </section>
+
+      <section class="tab-panel" data-panel="features">
+        <div class="filters">
+          <select id="feature-layer" aria-label="选择图层"></select>
+          <input id="feature-search" type="search" placeholder="搜索属性 / 序号 / 行号…" />
+        </div>
+        <div class="table-wrap">
+          <table id="feature-table">
+            <thead><tr>
+              <th>#</th><th>源行</th><th>几何类型</th><th>坐标数</th><th>属性摘要</th><th>状态</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="tab-panel" data-panel="repair">
+        <div class="repair-box">
+          <p class="muted small">勾选要应用的修复动作，系统生成<b>候选副本图层</b>。源文件与源图层永远不会被修改。</p>
+          <div id="repair-actions" class="repair-actions"></div>
+          <p class="small muted" style="margin:8px 0">面积基准自动跟随源图层 CRS：地理坐标系（如 EPSG:4326）用球面面积，投影坐标系（如 UTM）用平面面积，单位均为 m²。</p>
+          <button id="btn-build-candidate" class="btn btn-primary btn-block" type="button">生成候选修复副本</button>
+          <div id="repair-result" class="repair-result"></div>
+        </div>
+      </section>
+
+      <section class="tab-panel" data-panel="lineage">
+        <div id="lineage-view" class="lineage-view">
+          <p class="muted">生成候选修复并重新加载后，这里显示改动只作用于副本的完整证据链。</p>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <!-- 弹窗：CSV 导入 -->
+  <dialog id="dlg-csv" class="dlg">
+    <form method="dialog" id="form-csv">
+      <h3>导入坐标 CSV</h3>
+      <p class="muted small" id="csv-file-name"></p>
+      <label>X / 经度列
+        <select id="csv-x"></select>
+      </label>
+      <label>Y / 纬度列
+        <select id="csv-y"></select>
+      </label>
+      <label>坐标系（缺失则投影转换停止）
+        <select id="csv-crs"></select>
+      </label>
+      <p id="csv-warn" class="dlg-warn" hidden></p>
+      <div class="dlg-actions">
+        <button value="cancel" class="btn btn-ghost" type="submit">取消</button>
+        <button value="confirm" class="btn btn-primary" type="submit" id="csv-confirm">导入</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 弹窗：投影切换 -->
+  <dialog id="dlg-proj" class="dlg">
+    <form method="dialog" id="form-proj">
+      <h3>切换显示投影</h3>
+      <p class="muted small">仅改变地图显示坐标；要素的原始坐标完整留存，可随时切回。</p>
+      <label>目标坐标系
+        <select id="proj-target"></select>
+      </label>
+      <p id="proj-warn" class="dlg-warn" hidden></p>
+      <div class="dlg-actions">
+        <button value="cancel" class="btn btn-ghost" type="submit">取消</button>
+        <button value="confirm" class="btn btn-primary" type="submit">切换</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 弹窗：指定 CRS -->
+  <dialog id="dlg-crs" class="dlg">
+    <form method="dialog" id="form-crs">
+      <h3>显式指定图层坐标系</h3>
+      <label>图层
+        <select id="crs-layer"></select>
+      </label>
+      <label>坐标系
+        <select id="crs-code"></select>
+      </label>
+      <p class="muted small">指定后才允许投影转换；不会改动任何坐标数值。</p>
+      <div class="dlg-actions">
+        <button value="cancel" class="btn btn-ghost" type="submit">取消</button>
+        <button value="confirm" class="btn btn-primary" type="submit">指定</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 弹窗：要素/问题详情 -->
+  <dialog id="dlg-detail" class="dlg dlg-wide">
+    <h3 id="detail-title">详情</h3>
+    <div id="detail-body"></div>
+    <div class="dlg-actions">
+      <button class="btn btn-primary" value="close" type="submit" form="detail-close-form">关闭</button>
+    </div>
+    <form id="detail-close-form" method="dialog" hidden></form>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+</div>
+<script type="module" src="vendor/bundle.js"></script>
+</body>
+</html>

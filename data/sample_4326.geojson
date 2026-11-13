@@ -1,0 +1,330 @@
+{
+  "type": "FeatureCollection",
+  "name": "示例图层_4326（含各类问题）",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:4326"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "F01-正常面",
+      "properties": {
+        "name": "F01-正常面"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              116.3,
+              39.9
+            ],
+            [
+              116.35,
+              39.9
+            ],
+            [
+              116.35,
+              39.94
+            ],
+            [
+              116.3,
+              39.94
+            ],
+            [
+              116.3,
+              39.9
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "F02-带洞面",
+      "properties": {
+        "name": "F02-带洞面"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              116.4,
+              39.9
+            ],
+            [
+              116.48,
+              39.9
+            ],
+            [
+              116.48,
+              39.96
+            ],
+            [
+              116.4,
+              39.96
+            ],
+            [
+              116.4,
+              39.9
+            ]
+          ],
+          [
+            [
+              116.43,
+              39.92
+            ],
+            [
+              116.45,
+              39.92
+            ],
+            [
+              116.45,
+              39.94
+            ],
+            [
+              116.43,
+              39.94
+            ],
+            [
+              116.43,
+              39.92
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "F03-蝴蝶结自相交",
+      "properties": {
+        "name": "F03-蝴蝶结自相交"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              116.5,
+              39.85
+            ],
+            [
+              116.58,
+              39.92
+            ],
+            [
+              116.5,
+              39.92
+            ],
+            [
+              116.58,
+              39.85
+            ],
+            [
+              116.5,
+              39.85
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "F04-未闭合环",
+      "properties": {
+        "name": "F04-未闭合环"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              116.6,
+              39.9
+            ],
+            [
+              116.66,
+              39.9
+            ],
+            [
+              116.66,
+              39.95
+            ],
+            [
+              116.6,
+              39.95
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "F05-重复点",
+      "properties": {
+        "name": "F05-重复点"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            116.3,
+            39.8
+          ],
+          [
+            116.36,
+            39.8
+          ],
+          [
+            116.36,
+            39.8
+          ],
+          [
+            116.4,
+            39.84
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "F06-空几何",
+      "properties": {
+        "name": "F06-空几何"
+      },
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "id": "F07-越界点",
+      "properties": {
+        "name": "F07-越界点"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.4,
+          95
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "F08-重复A",
+      "properties": {
+        "kind": "监测井",
+        "label": "同一点位"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.42,
+          39.88
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "F09-重复B",
+      "properties": {
+        "kind": "监测井",
+        "label": "同一点位"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.42,
+          39.88
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "F10-集合几何",
+      "properties": {
+        "name": "F10-集合几何"
+      },
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": [
+          {
+            "type": "Point",
+            "coordinates": [
+              116.55,
+              39.98
+            ]
+          },
+          {
+            "type": "LineString",
+            "coordinates": [
+              [
+                116.55,
+                39.98
+              ],
+              [
+                116.6,
+                40
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "F11-跨日期变更线",
+      "properties": {
+        "name": "F11-跨日期变更线"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            177.5,
+            -18
+          ],
+          [
+            179.5,
+            -18.2
+          ],
+          [
+            -179,
+            -18.4
+          ],
+          [
+            -177,
+            -18.1
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "F12-正常多点",
+      "properties": {
+        "name": "F12-正常多点"
+      },
+      "geometry": {
+        "type": "MultiPoint",
+        "coordinates": [
+          [
+            116.33,
+            39.96
+          ],
+          [
+            116.37,
+            39.97
+          ],
+          [
+            116.39,
+            39.95
+          ]
+        ]
+      }
+    }
+  ]
+}
